@@ -38,7 +38,7 @@ const setCookies = (res, accessToken, refreshToken) => {
   });
 };
 
-export const signup = async (req, res) => {
+export const signup = async (req, res, next) => {
   const { email, password, name } = req.body;
   try {
     const userExists = await User.findOne({ email });
@@ -62,7 +62,8 @@ export const signup = async (req, res) => {
     });
   } catch (error) {
     console.log("Error in signup controller", error.message);
-    res.status(500).json({ message: error.message });
+    // res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
@@ -91,7 +92,7 @@ export const login = async (req, res) => {
   }
 };
 
-export const logout = async (req, res) => {
+export const logout = async (req, res, next) => {
   try {
     const refreshToken = req.cookies.refreshToken;
     if (refreshToken) {
@@ -107,7 +108,8 @@ export const logout = async (req, res) => {
     res.json({ message: "Logged out successfully" });
   } catch (error) {
     console.log("Error in logout controller", error.message);
-    res.status(500).json({ message: "Server error", error: error.message });
+    // res.status(500).json({ message: "Server error", error: error.message });
+    next(error);
   }
 };
 
